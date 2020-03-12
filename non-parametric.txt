@@ -5,3 +5,5 @@ Different distribution (reject H0)
 ### Mann-Whitney U test:
 p-value: 0.00009
 Different distribution (reject H0)
+
+___________________________________
