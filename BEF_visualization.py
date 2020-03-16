@@ -18,7 +18,7 @@ import random as r
 
 # importing data 
 #df = pd.read_excel(r'C:\Users\Lukas\Desktop\Kodinimas\scripts\BF20.xlxs') 
-df = pd.read_excel(r'C:\Users\Lukas\Desktop\Python\BF20.xlsx', sheet_name=1) 
+df = pd.read_excel(r'C:\Users\Lukas\OneDrive\University\Year 3\Behavioral Finance\Project\Python\BEF_Project\BF20.xlsx', sheet_name=1) 
 
 ####### BET VS GAIN FOR LOW AND HIGH FREQUENCY ########################################
 
@@ -205,10 +205,10 @@ plt.ylabel('Average bet')
 plt.xlabel('Frequency')
 plt.xticks(ticks=[0, 1], labels=['High', 'Low'])
 
-# # Saving the figure (MUST BE DONE BEFORE PLT.SHOW() OTHERWISE IT'LL A BLANK PICTURE)
-# plt.savefig('Frequencies.png', dpi=450)
-# # plotting 
-# plt.show()
+# Saving the figure (MUST BE DONE BEFORE PLT.SHOW() OTHERWISE IT'LL A BLANK PICTURE)
+plt.savefig('Frequencies.png', dpi=450)
+# plotting 
+plt.show()
 
 
 ####### BET FOR MALES AND FEMALES ########################################
@@ -234,10 +234,10 @@ plt.ylabel('Average bet')
 plt.xlabel('Gender')
 plt.xticks(ticks=[0, 1], labels=['Male', 'Female'])
 
-# # Saving the figure (MUST BE DONE BEFORE PLT.SHOW() OTHERWISE IT'LL A BLANK PICTURE)
-# plt.savefig('Frequencies.png', dpi=450)
-# # plotting 
-# plt.show()
+# Saving the figure (MUST BE DONE BEFORE PLT.SHOW() OTHERWISE IT'LL A BLANK PICTURE)
+plt.savefig('Gender.png', dpi=450)
+# plotting 
+plt.show()
 
 
 ####### BET FOR DUTCH AND INTERNATIONALS ########################################
@@ -263,10 +263,10 @@ plt.xlabel('Nationality')
 plt.ylabel('Average bet')
 plt.xticks(ticks=[0, 1], labels=['Internationals', 'Dutch'])
 
-# # Saving the figure
-# plt.savefig('DutchInternationals.png', dpi=450)
-# # plotting 
-# plt.show() 
+# Saving the figure
+plt.savefig('DutchInternationals.png', dpi=450)
+# plotting 
+plt.show() 
 
 
 ####### BET FOR DIFFERENT AGES ########################################
@@ -311,9 +311,9 @@ plt.ylabel('Average bet')
 plt.xticks(ticks=[1999, 1998, 1997], labels=['21', '22', '23'])
 
 # # Saving the figure
-# plt.savefig('DutchInternationals.png', dpi=450)
-# # plotting 
-# plt.show() 
+plt.savefig('Age.png', dpi=450)
+# plotting 
+plt.show() 
 
 
 

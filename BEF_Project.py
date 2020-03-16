@@ -10,10 +10,11 @@ from stargazer.stargazer import Stargazer as sg
 import matplotlib.pyplot as plt
 from scipy import stats
 import numpy as np
+import researchpy as rp # for correlation matrix
 
 # importing data 
 #df = pd.read_excel(r'C:\Users\Lukas\Desktop\Kodinimas\scripts\BF20.xlxs') 
-df = pd.read_excel(r'C:\Users\Lukas\Desktop\Python\BF20.xlsx', sheet_name=1) 
+df = pd.read_excel(r'C:\Users\Lukas\OneDrive\University\Year 3\Behavioral Finance\Project\Python\BEF_Project\BF20.xlsx', sheet_name=1) 
 
 ######### Preparing data
 
@@ -21,43 +22,52 @@ df = pd.read_excel(r'C:\Users\Lukas\Desktop\Python\BF20.xlsx', sheet_name=1)
 # Histogram
 df['Avg_bet'].hist(bins=100)
 
-# high and low freq average gain and bet
-# # lowfreq data  
-# df_gain_lowfreq = df.loc[df['Low_freq'] == 1, 'Avg_gain'] 
-# df_bet_lowfreq = df.loc[df['Low_freq'] == 1, 'Avg_bet'] 
-# # highfreq data 
-# df_gain_highfreq = df.loc[df['Low_freq'] == 0, 'Avg_gain'] 
-# df_bet_highfreq = df.loc[df['Low_freq'] == 0, 'Avg_bet'] 
+# 1999    20
+# 1998    20
+# 1997    14
+# 1996     6
+# 1995     6
+# 2000     5
+# 1994     3
+# 1989     1
+# 1988     1
+# 1986     1
 
-# Time dummies
-df['dummy_1995'] = 0
-df.loc[df['age'] == 1995, 'dummy_1995'] = 1
+# Time variable (1-6, each point equals 1 year older)
+df['Age'] = 0
+df.loc[df['age'] == 1994, 'Age'] = 7
+df.loc[df['age'] == 1995, 'Age'] = 6
+df.loc[df['age'] == 1996, 'Age'] = 5
+df.loc[df['age'] == 1997, 'Age'] = 4
+df.loc[df['age'] == 1998, 'Age'] = 3
+df.loc[df['age'] == 1999, 'Age'] = 2
+df.loc[df['age'] == 2000, 'Age'] = 1
+df = df.loc[df['Age'] != 0, :]
 
-df['dummy_1996'] = 0
-df.loc[df['age'] == 1996, 'dummy_1996'] = 1
+# Checking for correlation
+corr_type, corr_matrix, corr_ps = rp.corr_case(df[['Low_freq', 'female', 'dutch', 'Age']])
+# Long story in short, multicollinearity increases the estimate of standard error of regression coefficients which makes some variables statistically insignificant when they should be significant.
+# 0.0 – 0.2	Weak correlation
+# 0.3 – 0.6	Moderate correlation
+# 0.7 – 1.0	Strong correlation
 
-df['dummy_1997'] = 0
-df.loc[df['age'] == 1997, 'dummy_1997'] = 1
+# df.loc[df['female'] == 1, ['female', 'dutch']].groupby(['dutch']).count() # how many females that are dutch and non dutch
+# df.loc[df['female'] == 0, ['female', 'dutch']].groupby(['dutch']).count() # How many males that are dutch and non dutch
 
-df['dummy_1998'] = 0
-df.loc[df['age'] == 1998, 'dummy_1998'] = 1
+# Female and dutch (-0.31 correlation | 0.0055 p-value) = females tend to be non dutch
 
-df['dummy_1999'] = 0
-df.loc[df['age'] == 1999, 'dummy_1999'] = 1
-
-df['dummy_2000'] = 0
-df.loc[df['age'] == 2000, 'dummy_2000'] = 1
-
-######### Regressions
+########################################
+######### Regressions ##################
+########################################
 # Sklearn is more developed, however it doesn't output nice summary of traditional statistics
 
 # Regression variables
-X = df[['Low_freq', 'female', 'dutch', 'dummy_1997', 'dummy_1998', 'dummy_1999']]
+X = df[['Low_freq', 'female', 'dutch', 'Age']]
 Y = df['Avg_bet']
 
 # Running the regression
 X = sm.add_constant(X) ## add an intercept (beta_0) to our model
-model = sm.OLS(Y, X).fit()
+model = sm.OLS(Y, X).fit(cov_type="HC1") # cov_type="HC1" makes the regression model robust
 
 # Calculating predicted values and assigning them to the df
 predictions = model.predict(X)
@@ -132,7 +142,10 @@ plt.hist(df_avg_low_bet, bins=30, alpha=0.5, label='Low frequency', color='orang
 plt.ylabel('Value count')
 plt.xlabel('Average bet')
 plt.legend(loc='upper right')
-plt.show()
+# # Saving the figure
+plt.savefig('hist_bet_by_freq.png', dpi=450)
+# plotting 
+plt.show() 
 
 # Testing
 u_statistic, p_value = stats.mannwhitneyu(df_avg_high_bet, df_avg_low_bet)
@@ -169,7 +182,10 @@ plt.hist(df_avg_female_bet, bins=30, alpha=0.5, label='Females', color='orange')
 plt.ylabel('Value count')
 plt.xlabel('Average bet')
 plt.legend(loc='upper right')
-plt.show()
+# # Saving the figure
+plt.savefig('hist_bet_by_gender.png', dpi=450)
+# plotting 
+plt.show() 
 
 # Testing
 u_statistic, p_value = stats.mannwhitneyu(df_avg_male_bet, df_avg_female_bet)
@@ -187,7 +203,14 @@ else:
 # lower than 0.05 p-value rejects the null hypothesis
 
 
-
+# 1. Save .py files 
+# 2. Save figures from BEF_visualization (HD export to .png)
+# 3. Save figures from BEF_project
+# 3. Put Scien2 .tex files into the online converter
+# 5. Export .pdf files (open them in word)
+# 6. Copy the non-parametric test results to comb_file
+# 7. Copy images to comb_file
+# 8. Push to git
 
 
 
