@@ -44,8 +44,23 @@ df.loc[df['age'] == 1999, 'Age'] = 2
 df.loc[df['age'] == 2000, 'Age'] = 1
 df = df.loc[df['Age'] != 0, :]
 
+# Dropping unnecessary variables from the dataframe
+df = df[['Avg_bet', 'Low_freq', 'female', 'dutch', 'Age']]
+
 # Checking for correlation
 corr_type, corr_matrix, corr_ps = rp.corr_case(df[['Low_freq', 'female', 'dutch', 'Age']])
+
+# LaTeX correlation table
+print(rp.corr_pair(df[['Low_freq', 'female', 'dutch', 'Age']]).to_latex())
+
+# \documentclass{report}  # Paste on top of the doc
+# \usepackage{booktabs}
+# \begin{document}
+
+# Paste in the 'print' results
+
+# \end{document}    # Paste in the end of the doc
+
 # Long story in short, multicollinearity increases the estimate of standard error of regression coefficients which makes some variables statistically insignificant when they should be significant.
 # 0.0 – 0.2	Weak correlation
 # 0.3 – 0.6	Moderate correlation
@@ -55,6 +70,17 @@ corr_type, corr_matrix, corr_ps = rp.corr_case(df[['Low_freq', 'female', 'dutch'
 # df.loc[df['female'] == 0, ['female', 'dutch']].groupby(['dutch']).count() # How many males that are dutch and non dutch
 
 # Female and dutch (-0.31 correlation | 0.0055 p-value) = females tend to be non dutch
+
+# Printing STATA-like summary statistics table (ant outputing as LaTeX)
+# df.describe(percentiles=[]).transpose().to_latex()
+
+# \documentclass{report}  # Paste on top of the doc
+# \usepackage{booktabs}
+# \begin{document}
+
+# Paste in the 'print' results
+
+# \end{document}    # Paste in the end of the doc
 
 ########################################
 ######### Regressions ##################
@@ -71,12 +97,12 @@ model = sm.OLS(Y, X).fit(cov_type="HC1") # cov_type="HC1" makes the regression m
 
 # Calculating predicted values and assigning them to the df
 predictions = model.predict(X)
-df['Predicted_values'] = predictions
-pred = df['Predicted_values']
+# df['Predicted_values'] = predictions
+# pred = df['Predicted_values']
 # Predicted values vs actual values
 # plt.scatter(pred, df['Avg_bet'])
 
-# Print out the statistics
+# Print out the non-scientific & thorough regression output
 print(model.summary())
 
 ######### Outputing as LaTeX (latech proununciation)
